@@ -17,20 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(function (req, res, next) {
-    const filepath = path.join(__dirname, "static", req.url);
-    fs.stat(filepath, function (err, fileInfo) {
-        if (err) {
-            next(); // File not found, proceed to the next middleware
-            return;
-        }
-        if (fileInfo.isFile()) {
-            res.sendFile(filepath); // Serve the file if it exists
-        } else {
-            next(); // Not a file, proceed to the next middleware
-        }
-    });
-});
+
 
 // Middleware for CORS
 app.use((req, res, next) => {
@@ -41,3 +28,38 @@ app.use((req, res, next) => {
     next();
 });
 
+MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongodb.net", { useUnifiedTopology: true })
+    .then(client => {
+        db = client.db('activity_haven');
+        console.log("Connected to MongoDB");
+
+       
+        const port = process.env.PORT || 3000;
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch(err => {
+        console.error("Failed to connect to MongoDB", err);
+    });
+
+    app.get('/', (req, res) => {
+        res.send('Select a collection, e.g., /collection/activities');
+    });
+    
+    
+    // Middleware to handle collection names
+    app.param('collectionName', (req, res, next, collectionName) => {
+        req.collection = db.collection(collectionName);
+        return next();
+    });
+    
+    // Get all activities from a collection
+    app.get('/collection/:collectionName', (req, res, next) => {
+        
+        req.collection.find({}).toArray((err, results) => {
+            if (err) return next(err);
+            
+            res.send(results);
+        });
+    });
