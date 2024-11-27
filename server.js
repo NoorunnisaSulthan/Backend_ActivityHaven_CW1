@@ -106,3 +106,16 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
             });
         });
     });
+
+    app.delete("/collection/:collectionName", (req, res, next) => {
+    
+    
+        req.collection.deleteMany({}, (err, result) => {
+            if (err) return next(err);
+    
+            res.send({
+                msg: result.deletedCount > 0 ? "Cart cleared successfully" : "Cart is already empty",
+            });
+        });
+    });
+    
