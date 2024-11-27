@@ -85,3 +85,24 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
     
     });
     
+// Delete a document by ID
+    app.delete("/collection/:collectionName/:id", (req, res, next) => {
+        const collection = req.collection; 
+        const objectId = new ObjectId(req.params.id); 
+            collection.deleteOne({ _id: objectId }, (err, deleteResult) => {
+            if (err) return next(err);
+    
+            // If no item was deleted, return an error message
+            if (deleteResult.deletedCount !== 1) {
+                return res.status(404).send({ msg: "Item not found or already deleted" });
+            }
+    
+            // After deletion, retrieve the updated collection
+            collection.find({}).toArray((err, results) => {
+                if (err) return next(err);
+    
+                // Send the updated collection as the response
+                res.send(results);
+            });
+        });
+    });
