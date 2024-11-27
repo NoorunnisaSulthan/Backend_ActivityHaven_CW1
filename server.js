@@ -63,3 +63,12 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
             res.send(results);
         });
     });
+
+    //post data to collection
+    app.post('/collection/:collectionName', (req, res, next) => {
+        req.collection.insertOne(req.body, (err, result) => {
+            if (err) return next(err);
+            res.send(result.ops);
+        });
+    });
+    
