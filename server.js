@@ -102,11 +102,13 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
                 if (err) return next(err);
     
                 // Send the updated collection as the response
-                res.send(results);
+                res.send(results);``
             });
         });
     });
 
+
+    //functionality to delete cart items from collection in db after checkout
     app.delete("/collection/:collectionName", (req, res, next) => {
     
     
@@ -118,4 +120,23 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
             });
         });
     });
+
+    app.get('/search', async (req, res, next) => {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).send({ error: 'Search query is required' });
+        }
+        try {
+            const results = await db.collection('activities').find({
+                $or: [
+                    { activity: { $regex: q, $options: 'i' } }, 
+                    { location: { $regex: q, $options: 'i' } },
+                ],
+            }).toArray();
+            res.send(results);
+        } catch (err) {
+            next(err);
+        }
+    });
+    
     
