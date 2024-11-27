@@ -72,3 +72,16 @@ MongoClient.connect("mongodb+srv://snoorunnisa27:wednesday@cluster0.ygxz3.mongod
         });
     });
     
+//put updated inventory count to document within collection
+    app.put('/collection/:collectionName/:id', (req, res, next) => {
+        req.collection.updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: req.body },
+            (err, result) => {
+                if (err) return next(err);
+                res.send(result.modifiedCount === 1 ? { msg: req.body } : { msg: 'error' });
+            }
+        );
+    
+    });
+    
