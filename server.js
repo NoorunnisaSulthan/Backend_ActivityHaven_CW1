@@ -1,5 +1,5 @@
 const express = require('express');
-const { ObjectID, ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path'); 
 const fs = require('fs');   
@@ -10,7 +10,7 @@ app.set('port', 3000);
 const cors = require('cors');
 app.use(cors());  
 
-//middleware 
+//logger middleware 
 app.use((req, res, next) => {
     const now = new Date().toISOString();
     console.log(`[${now}] ${req.method} request to ${req.url}`);
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 // Middleware for CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Credentials", "true"); //allows cookies to be sent
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
     next();
