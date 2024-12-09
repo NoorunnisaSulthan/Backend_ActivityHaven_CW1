@@ -18,6 +18,19 @@ app.use((req, res, next) => {
 });
 
 
+app.use(function(req,res,next){
+    var filepath=path.join(__dirname,"static",req.url)
+    fs.stat(filepath,function(err,fileInfo){
+        if(err){
+            next();
+            return;
+        }
+        if(fileInfo.isFile()) res.sendFile(filepath);
+        else next();
+    });
+})
+
+
 
 // Middleware for CORS
 app.use((req, res, next) => {
