@@ -17,7 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
+//static middleware
 app.use(function(req,res,next){
     var filepath=path.join(__dirname,"static",req.url)
     fs.stat(filepath,function(err,fileInfo){
