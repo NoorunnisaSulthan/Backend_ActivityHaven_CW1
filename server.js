@@ -158,3 +158,9 @@ app.get("/search", async (req, res, next) => {
     next(err);
   }
 });
+
+// Handle 404 errors for undefined routes
+app.use(function(req, res) {         
+    res.status(404); // Set status to 404
+    res.send("File not found!"); 
+    });
